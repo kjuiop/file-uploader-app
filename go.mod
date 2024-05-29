@@ -2,7 +2,10 @@ module file-uploader-app
 
 go 1.21.9
 
-require github.com/gin-gonic/gin v1.10.0
+require (
+	github.com/gin-gonic/gin v1.10.0
+	github.com/kelseyhightower/envconfig v1.4.0
+)
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect
