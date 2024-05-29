@@ -1,12 +1,14 @@
 package server
 
 import (
+	"context"
 	"errors"
 	"file-uploader-app/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"sync"
 )
 
 type Server struct {
@@ -34,13 +36,20 @@ func SetupGinServer(cfg config.Server) *Server {
 	}
 }
 
-func (s *Server) Run() {
+func (s *Server) Run(wg *sync.WaitGroup) {
+	defer wg.Done()
 
 	err := s.srv.ListenAndServe()
 	if errors.Is(err, http.ErrServerClosed) {
 		log.Println("server close")
 	} else {
 		log.Fatalf("run server error : %s\n", err.Error())
+	}
+}
+
+func (s *Server) Shutdown(ctx context.Context) {
+	if err := s.srv.Shutdown(ctx); err != nil {
+		log.Printf("error during server shutdown, err : %s\n", err.Error())
 	}
 }
 
