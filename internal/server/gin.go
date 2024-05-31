@@ -6,7 +6,7 @@ import (
 	"file-uploader-app/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
+	"log/slog"
 	"net/http"
 	"sync"
 )
@@ -42,15 +42,15 @@ func (g *Gin) Run(wg *sync.WaitGroup) {
 
 	err := g.srv.ListenAndServe()
 	if errors.Is(err, http.ErrServerClosed) {
-		log.Println("server close")
+		slog.Debug("server close")
 	} else {
-		log.Fatalf("run server error : %s\n", err.Error())
+		slog.Error("run server error", "error", err)
 	}
 }
 
 func (g *Gin) Shutdown(ctx context.Context) {
 	if err := g.srv.Shutdown(ctx); err != nil {
-		log.Printf("error during server shutdown, err : %s\n", err.Error())
+		slog.Error("error during server shutdown", "error", err)
 	}
 }
 
