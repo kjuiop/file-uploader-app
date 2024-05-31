@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"errors"
+	"file-uploader-app/api/controller"
 	"file-uploader-app/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -20,11 +21,8 @@ func NewGinServer(cfg config.Server) Client {
 
 	router := getGinEngine(cfg.Mode)
 
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	systemController := controller.NewSystemController()
+	router.GET("/ping", systemController.GetHealth)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf(":%s", cfg.Port),
