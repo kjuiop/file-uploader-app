@@ -17,7 +17,8 @@ type Gin struct {
 }
 
 func NewGinServer(cfg config.Server) Client {
-	router := getGinEngine(cfg.IsDryRun)
+
+	router := getGinEngine(cfg.Mode)
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -53,9 +54,14 @@ func (g *Gin) Shutdown(ctx context.Context) {
 	}
 }
 
-func getGinEngine(isDryRun bool) *gin.Engine {
-	if isDryRun {
+func getGinEngine(mode string) *gin.Engine {
+	switch mode {
+	case "prod":
+		return gin.New()
+	case "test":
+		gin.SetMode(gin.TestMode)
+		return gin.Default()
+	default:
 		return gin.Default()
 	}
-	return gin.New()
 }

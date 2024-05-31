@@ -7,8 +7,8 @@ type EnvConfig struct {
 }
 
 type Server struct {
-	IsDryRun bool   `envconfig:"FUA_DRY_RUN" default:"true"`
-	Port     string `envconfig:"FUA_SERVER_PORT" default:"8090"`
+	Mode string `envconfig:"FUA_ENV" default:"dev"`
+	Port string `envconfig:"FUA_SERVER_PORT" default:"8090"`
 }
 
 func LoadEnvConfig() (*EnvConfig, error) {

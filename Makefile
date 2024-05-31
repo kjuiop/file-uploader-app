@@ -14,7 +14,7 @@ LDFLAGS+=-X main.APP_VERSION=$(TARGET_VERSION)
 LDFLAGS+=-X main.GIT_HASH=`git rev-parse HEAD`
 LDFLAGS+=-s -w
 
-all: config build
+all: config build test
 
 config:
 	@if [ ! -d $(TARGET_DIR) ]; then mkdir $(TARGET_DIR); fi
@@ -33,3 +33,6 @@ target-version:
 build_num:
 	@echo $$(($$(cat $(BUILD_NUM_FILE)) + 1 )) > $(BUILD_NUM_FILE)
 	@echo "BUILD_NUM      : $(BUILD_NUM)"
+
+test:
+	@go test ./...
