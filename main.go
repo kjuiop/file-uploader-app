@@ -21,7 +21,7 @@ func main() {
 		log.Fatalf("fail to read config : %s\n", err.Error())
 	}
 
-	srv := server.SetupGinServer(cfg.Server)
+	srv := server.NewGinServer(cfg.Server)
 
 	wg.Add(1)
 	go srv.Run(&wg)
