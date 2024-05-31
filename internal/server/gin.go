@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"file-uploader-app/api/controller"
+	"file-uploader-app/api/middleware"
 	"file-uploader-app/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,8 @@ type Gin struct {
 func NewGinServer(cfg config.Server) Client {
 
 	router := getGinEngine(cfg.Mode)
+
+	router.Use(middleware.LoggingMiddleware)
 
 	systemController := controller.NewSystemController()
 	router.GET("/ping", systemController.GetHealth)

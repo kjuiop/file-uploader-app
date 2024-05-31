@@ -15,7 +15,7 @@ type Server struct {
 type Logger struct {
 	Level       string `envconfig:"AWC_LOG_LEVEL" default:"debug"`
 	Path        string `envconfig:"AWC_LOG_PATH" default:"./logs/access.log"`
-	PrintStdOut bool   `envconfig:"LOG_STDOUT" default:"true"`
+	PrintStdOut bool   `envconfig:"LOG_STDOUT" default:"false"`
 }
 
 func LoadEnvConfig() (*EnvConfig, error) {
