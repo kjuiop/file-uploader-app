@@ -3,7 +3,7 @@ package controller
 import (
 	"file-uploader-app/models"
 	"github.com/gin-gonic/gin"
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -26,7 +26,7 @@ func (s *SystemController) OccurPanic(c *gin.Context) {
 func (s *SystemController) Print(c *gin.Context) {
 
 	for i := 0; i < 20; i++ {
-		log.Println("is log index: ", i+1)
+		slog.Debug("print log index", "index", i+1)
 		time.Sleep(time.Second)
 	}
 }

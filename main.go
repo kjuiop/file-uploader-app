@@ -5,6 +5,7 @@ import (
 	"file-uploader-app/config"
 	"file-uploader-app/internal/server"
 	"file-uploader-app/logger"
+	"file-uploader-app/reporter"
 	"log"
 	"log/slog"
 	"os"
@@ -31,13 +32,15 @@ func main() {
 		log.Fatalf("fail to invalid config, err : %v\n", err)
 	}
 
+	reporter.NewSlackReporter(cfg.Slack)
+
 	if err := logger.SlogInit(cfg.Logger); err != nil {
 		log.Fatalf("fail to init slog err : %v\n", err)
 	}
 
 	slog.Debug("file uploader app start", "git_hash", GIT_HASH, "build_time", BUILD_TIME, "app_version", APP_VERSION)
 
-	srv := server.NewGinServer(cfg.Server, cfg.Slack)
+	srv := server.NewGinServer(cfg.Server)
 
 	wg.Add(1)
 	go srv.Run(&wg)

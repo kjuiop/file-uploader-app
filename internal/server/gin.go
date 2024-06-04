@@ -18,12 +18,12 @@ type Gin struct {
 	cfg config.Server
 }
 
-func NewGinServer(serverCfg config.Server, slackCfg config.Slack) Client {
+func NewGinServer(serverCfg config.Server) Client {
 
 	router := getGinEngine(serverCfg.Mode)
 
 	router.Use(middleware.LoggingMiddleware)
-	router.Use(middleware.RecoveryErrorReport(slackCfg.WebhookReportUrl))
+	router.Use(middleware.RecoveryErrorReport())
 
 	systemController := controller.NewSystemController()
 	router.GET("/ping", systemController.GetHealth)

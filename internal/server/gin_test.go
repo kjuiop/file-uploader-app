@@ -18,11 +18,8 @@ func TestRunAndShutdown(t *testing.T) {
 		Mode: "test",
 		Port: "8090",
 	}
-	slackCfg := config.Slack{
-		WebhookReportUrl: "https://hooks.slack.com/services",
-	}
 
-	s := NewGinServer(serverCfg, slackCfg)
+	s := NewGinServer(serverCfg)
 
 	wg.Add(1)
 	go s.Run(wg)
