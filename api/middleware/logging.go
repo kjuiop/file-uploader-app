@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"log/slog"
 	"time"
 )
@@ -11,6 +12,9 @@ func LoggingMiddleware(c *gin.Context) {
 	start := time.Now() // Start timer
 	path := c.Request.URL.Path
 	raw := c.Request.URL.RawQuery
+
+	requestId := uuid.New().String()
+	c.Set("request_id", requestId)
 
 	// Process request
 	c.Next()
@@ -35,6 +39,7 @@ func LoggingMiddleware(c *gin.Context) {
 	param.Path = path
 
 	logger := slog.With(
+		"request_id", requestId,
 		"client_ip", param.ClientIP,
 		"method", param.Method,
 		"status_code", param.StatusCode,
