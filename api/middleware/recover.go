@@ -14,7 +14,7 @@ func RecoveryErrorReport() gin.HandlerFunc {
 			if err := recover(); err != nil {
 				errMsg := fmt.Sprintf("recovered from panic : %v", err)
 				slog.Error(errMsg)
-				reporter.Reporter.SendSlackPanicReport(errMsg)
+				reporter.Client.SendSlackPanicReport(errMsg)
 				c.AbortWithStatus(http.StatusInternalServerError)
 			}
 		}()

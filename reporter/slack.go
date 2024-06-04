@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-var Reporter *Slack
+var Client *Slack
 
 type Slack struct {
 	cfg config.Slack
@@ -20,7 +20,7 @@ func NewSlackReporter(cfg config.Slack) {
 		cfg: cfg,
 	}
 
-	Reporter = slack
+	Client = slack
 }
 
 func (s *Slack) SendSlackPanicReport(message string) {

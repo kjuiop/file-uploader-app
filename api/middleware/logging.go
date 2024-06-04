@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"file-uploader-app/reporter"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"log/slog"
@@ -52,5 +54,7 @@ func LoggingMiddleware(c *gin.Context) {
 		logger.Info("success")
 	} else {
 		logger.Error(param.ErrorMessage)
+		reportMsg := fmt.Sprintf("status_code : %d, err : %s", c.Writer.Status(), param.ErrorMessage)
+		reporter.Client.SendSlackPanicReport(reportMsg)
 	}
 }
