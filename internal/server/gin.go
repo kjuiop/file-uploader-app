@@ -18,23 +18,26 @@ type Gin struct {
 	cfg config.Server
 }
 
-func NewGinServer(cfg config.Server) Client {
+func NewGinServer(serverCfg config.Server, slackCfg config.Slack) Client {
 
-	router := getGinEngine(cfg.Mode)
+	router := getGinEngine(serverCfg.Mode)
 
 	router.Use(middleware.LoggingMiddleware)
+	router.Use(middleware.RecoveryErrorReport(slackCfg.WebhookReportUrl))
 
 	systemController := controller.NewSystemController()
 	router.GET("/ping", systemController.GetHealth)
+	router.GET("/panic", systemController.OccurPanic)
+	router.GET("/print", systemController.Print)
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%s", cfg.Port),
+		Addr:    fmt.Sprintf(":%s", serverCfg.Port),
 		Handler: router,
 	}
 
 	return &Gin{
 		srv: srv,
-		cfg: cfg,
+		cfg: serverCfg,
 	}
 }
 

@@ -7,3 +7,8 @@ bin
 
 # log
 logs
+
+# env
+*.env
+
+# test_data

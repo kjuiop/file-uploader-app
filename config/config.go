@@ -1,10 +1,14 @@
 package config
 
-import "github.com/kelseyhightower/envconfig"
+import (
+	"errors"
+	"github.com/kelseyhightower/envconfig"
+)
 
 type EnvConfig struct {
 	Server Server
 	Logger Logger
+	Slack  Slack
 }
 
 type Server struct {
@@ -18,11 +22,24 @@ type Logger struct {
 	PrintStdOut bool   `envconfig:"LOG_STDOUT" default:"false"`
 }
 
+type Slack struct {
+	WebhookReportUrl string `envconfig:"FUA_SLACK_WEBHOOK_REPORT_URL" `
+}
+
 func LoadEnvConfig() (*EnvConfig, error) {
+
 	var config EnvConfig
-	err := envconfig.Process("fua", &config)
-	if err != nil {
+	if err := envconfig.Process("fua", &config); err != nil {
 		return nil, err
 	}
+
 	return &config, nil
+}
+
+func (c *EnvConfig) CheckValid() error {
+	if c.Slack.WebhookReportUrl == "" {
+		return errors.New("webhook report url required")
+	}
+
+	return nil
 }

@@ -14,19 +14,22 @@ import (
 func TestRunAndShutdown(t *testing.T) {
 
 	wg := &sync.WaitGroup{}
-	cfg := config.Server{
+	serverCfg := config.Server{
 		Mode: "test",
 		Port: "8090",
 	}
+	slackCfg := config.Slack{
+		WebhookReportUrl: "https://hooks.slack.com/services",
+	}
 
-	s := NewGinServer(cfg)
+	s := NewGinServer(serverCfg, slackCfg)
 
 	wg.Add(1)
 	go s.Run(wg)
 
 	time.Sleep(10 * time.Millisecond)
 
-	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/ping", cfg.Port))
+	resp, err := http.Get(fmt.Sprintf("http://localhost:%s/ping", serverCfg.Port))
 	if err != nil {
 		t.Fatalf("Failed to make GET request: %v", err)
 	}

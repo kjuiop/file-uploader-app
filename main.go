@@ -27,13 +27,17 @@ func main() {
 		log.Fatalf("fail to read config err : %v\n", err)
 	}
 
+	if err := cfg.CheckValid(); err != nil {
+		log.Fatalf("fail to invalid config, err : %v\n", err)
+	}
+
 	if err := logger.SlogInit(cfg.Logger); err != nil {
 		log.Fatalf("fail to init slog err : %v\n", err)
 	}
 
 	slog.Debug("file uploader app start", "git_hash", GIT_HASH, "build_time", BUILD_TIME, "app_version", APP_VERSION)
 
-	srv := server.NewGinServer(cfg.Server)
+	srv := server.NewGinServer(cfg.Server, cfg.Slack)
 
 	wg.Add(1)
 	go srv.Run(&wg)
