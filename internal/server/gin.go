@@ -3,6 +3,8 @@ package server
 import (
 	"context"
 	"errors"
+	"file-uploader-app/api/controller"
+	"file-uploader-app/api/middleware"
 	"file-uploader-app/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -16,24 +18,26 @@ type Gin struct {
 	cfg config.Server
 }
 
-func NewGinServer(cfg config.Server) Client {
+func NewGinServer(serverCfg config.Server) Client {
 
-	router := getGinEngine(cfg.Mode)
+	router := getGinEngine(serverCfg.Mode)
 
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
+	router.Use(middleware.LoggingMiddleware)
+	router.Use(middleware.RecoveryErrorReport())
+
+	systemController := controller.NewSystemController()
+	router.GET("/ping", systemController.GetHealth)
+	router.GET("/panic", systemController.OccurPanic)
+	router.GET("/print", systemController.Print)
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%s", cfg.Port),
+		Addr:    fmt.Sprintf(":%s", serverCfg.Port),
 		Handler: router,
 	}
 
 	return &Gin{
 		srv: srv,
-		cfg: cfg,
+		cfg: serverCfg,
 	}
 }
 

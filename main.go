@@ -5,6 +5,7 @@ import (
 	"file-uploader-app/config"
 	"file-uploader-app/internal/server"
 	"file-uploader-app/logger"
+	"file-uploader-app/reporter"
 	"log"
 	"log/slog"
 	"os"
@@ -26,6 +27,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("fail to read config err : %v\n", err)
 	}
+
+	if err := cfg.CheckValid(); err != nil {
+		log.Fatalf("fail to invalid config, err : %v\n", err)
+	}
+
+	reporter.NewSlackReporter(cfg.Slack)
 
 	if err := logger.SlogInit(cfg.Logger); err != nil {
 		log.Fatalf("fail to init slog err : %v\n", err)
