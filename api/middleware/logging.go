@@ -55,6 +55,6 @@ func LoggingMiddleware(c *gin.Context) {
 	} else {
 		logger.Error(param.ErrorMessage)
 		reportMsg := fmt.Sprintf("status_code : %d, err : %s", c.Writer.Status(), param.ErrorMessage)
-		reporter.Client.SendSlackPanicReport(reportMsg)
+		reporter.Client.SendSlackPanicReport(requestId, reportMsg)
 	}
 }
