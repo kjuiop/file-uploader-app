@@ -1,2 +1,14 @@
 # idea
 .idea
+
+# bin
+file-uploader-app
+bin
+
+# log
+logs
+
+# env
+*.env
+
+# test_data
