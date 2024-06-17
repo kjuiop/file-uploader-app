@@ -7,7 +7,6 @@ import (
 	"io"
 	"log/slog"
 	"os"
-	"runtime"
 	"strings"
 )
 
@@ -37,7 +36,7 @@ func SlogInit(cfg config.Logger) error {
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
 			if a.Key == slog.SourceKey {
 				s := a.Value.Any().(*slog.Source)
-				s.File = getSimplePath(2)
+				s.File = getSimplePath(s.File)
 			}
 			return a
 		},
@@ -61,16 +60,17 @@ func slogLevelParser(lvStr string) (slog.Level, error) {
 	return result, nil
 }
 
-func getSimplePath(skip int) string {
-	_, file, line, ok := runtime.Caller(skip)
-	if !ok {
-		file = "<???>"
-		line = 1
-	} else {
-		slash := strings.LastIndex(file, "/")
-		if slash >= 0 {
-			file = file[slash+1:]
-		}
+func getSimplePath(path string) string {
+	if len(path) <= 10 {
+		return path
 	}
-	return fmt.Sprintf("%s:%d", file, line)
+	idx := strings.LastIndex(path, "/")
+	if idx < 0 {
+		return path
+	}
+	jdx := strings.LastIndex(path[:idx], "/")
+	if jdx < 0 {
+		return path
+	}
+	return path[jdx:]
 }
