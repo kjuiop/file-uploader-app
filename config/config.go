@@ -9,6 +9,7 @@ type EnvConfig struct {
 	Server Server
 	Logger Logger
 	Slack  Slack
+	Upload Upload
 }
 
 type Server struct {
@@ -24,6 +25,10 @@ type Logger struct {
 
 type Slack struct {
 	WebhookReportUrl string `envconfig:"FUA_SLACK_WEBHOOK_REPORT_URL" `
+}
+
+type Upload struct {
+	FileSourceDir string `envconfig:"FUA_FILE_SOURCE_DIR" default:"/home/jake/file-upload"`
 }
 
 func LoadEnvConfig() (*EnvConfig, error) {

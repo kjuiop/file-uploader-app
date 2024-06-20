@@ -40,7 +40,7 @@ func main() {
 
 	slog.Debug("file uploader app start", "git_hash", GIT_HASH, "build_time", BUILD_TIME, "app_version", APP_VERSION)
 
-	srv := server.NewGinServer(cfg.Server)
+	srv := server.NewGinServer(*cfg)
 
 	wg.Add(1)
 	go srv.Run(&wg)

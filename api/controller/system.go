@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"file-uploader-app/api/form"
 	"file-uploader-app/models"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -24,7 +25,7 @@ func (s *SystemController) OccurPanic(c *gin.Context) {
 
 	requestId, exists := c.Get("request_id")
 	if !exists {
-		c.JSON(http.StatusInternalServerError, models.FailRes{Message: "request not exist"})
+		c.JSON(http.StatusInternalServerError, form.FailRes{Message: "request not exist"})
 		return
 	}
 
@@ -35,7 +36,7 @@ func (s *SystemController) Print(c *gin.Context) {
 
 	requestId, exists := c.Get("request_id")
 	if !exists {
-		c.JSON(http.StatusInternalServerError, models.FailRes{Message: "request not exist"})
+		c.JSON(http.StatusInternalServerError, form.FailRes{Message: "request not exist"})
 		return
 	}
 
@@ -44,5 +45,5 @@ func (s *SystemController) Print(c *gin.Context) {
 		time.Sleep(time.Second)
 	}
 
-	c.JSON(http.StatusOK, models.SuccessRes{Message: "ok"})
+	c.JSON(http.StatusOK, form.SuccessRes{Message: "ok"})
 }

@@ -18,9 +18,9 @@ type Gin struct {
 	cfg config.Server
 }
 
-func NewGinServer(serverCfg config.Server) Client {
+func NewGinServer(cfg config.EnvConfig) Client {
 
-	router := getGinEngine(serverCfg.Mode)
+	router := getGinEngine(cfg.Server.Mode)
 
 	router.Use(middleware.LoggingMiddleware)
 	router.Use(middleware.RecoveryErrorReport())
@@ -30,14 +30,18 @@ func NewGinServer(serverCfg config.Server) Client {
 	router.GET("/panic", systemController.OccurPanic)
 	router.GET("/print", systemController.Print)
 
+	uploaderController := controller.NewUploaderController(cfg.Upload)
+	uploadGroup := router.Group("/upload")
+	uploadGroup.POST("/file", uploaderController.FileUpload)
+
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%s", serverCfg.Port),
+		Addr:    fmt.Sprintf(":%s", cfg.Server.Port),
 		Handler: router,
 	}
 
 	return &Gin{
 		srv: srv,
-		cfg: serverCfg,
+		cfg: cfg.Server,
 	}
 }
 
