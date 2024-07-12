@@ -16,7 +16,7 @@ docker-build:
 
 docker-run:
 	@echo "TARGET_VERSION : $(TARGET_VERSION)"
-	docker run -p 8080:80 -p 443:443 --name $(MODULE_NAME) $(IMAGE_REPOSITORY):$(TARGET_VERSION)
+	docker run -p 8080:80 --name $(MODULE_NAME) $(IMAGE_REPOSITORY):$(TARGET_VERSION)
 
 docker-rm:
 	docker stop $(MODULE_NAME)
